@@ -61,13 +61,47 @@ function initIncidentes(db) {
         });
       });
 
+
+      router.put('/asign/:id', (req, res, next)=>{
+    var query = {"_id":new ObjectID(req.params.id)};
+    var update = {"$set":{"usuarioAsignado":"luis", "estado":"asignado","fechaYHora":new Date().getTime()}};
+
+    incidentesColl.updateOne(query, update, (err, rslt)=>{
+      if (err) {
+        console.log(err);
+        return res.status(404).json({ "error": "No se puede modificar el incidente" });
+      }
       
+      return res.status(200).json(rslt);
+    })
+  });
+
+  router.put('/close/:id', (req, res, next)=>{
+    var query = {"_id":new ObjectID(req.params.id)};
+    var update = {"$set":{"estado":"cerrado","fechaYHora":"14/02/2019"}};
+
+    incidentesColl.updateOne(query, update, (err, rslt)=>{
+      if (err) {
+        console.log(err);
+        return res.status(404).json({ "error": "No se puede modificar el incidente" });
+      }
+      
+      return res.status(200).json(rslt);
+    })
+  });
 
 
+  router.delete('/:id', (req, res, next) => {
+    var query = { "_id": new ObjectID(req.params.id) };
+    incidentesColl.removeOne(query, (err, rslt) => {
+      if (err) {
+        console.log(err);
+        return res.status(404).json({ "error": "No se pudo eliminar" });
+      }
 
-
-
-
+      return res.status(200).json(rslt);
+    })
+  });
 
 
     return router;
